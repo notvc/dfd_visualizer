@@ -91,8 +91,8 @@ document.addEventListener('DOMContentLoaded', () => {
         line.textContent = `${timestamp} ${message}`;
         
         consoleLog.appendChild(line);
-        // Scroll to the bottom
-        consoleLog.scrollTop = consoleLog.scrollHeight;
+        // Scroll to show newest entries (scrollTop=0 works with column-reverse)
+        consoleLog.scrollTop = 0;
     }
 
     // ----------------------------------------------------------------------
@@ -341,13 +341,34 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     btnModalCopy.addEventListener('click', () => {
-        saveDataTextarea.select();
-        document.execCommand('copy');
-        btnModalCopy.textContent = 'COPIED!';
-        SoundManager.playSuccess();
-        setTimeout(() => {
-            btnModalCopy.textContent = 'COPY TO CLIPBOARD';
-        }, 1500);
+        const textToCopy = saveDataTextarea.value;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                btnModalCopy.textContent = 'COPIED!';
+                SoundManager.playSuccess();
+                setTimeout(() => {
+                    btnModalCopy.textContent = 'COPY TO CLIPBOARD';
+                }, 1500);
+            }).catch(() => {
+                // Fallback for clipboard permission denied
+                saveDataTextarea.select();
+                document.execCommand('copy');
+                btnModalCopy.textContent = 'COPIED!';
+                SoundManager.playSuccess();
+                setTimeout(() => {
+                    btnModalCopy.textContent = 'COPY TO CLIPBOARD';
+                }, 1500);
+            });
+        } else {
+            // Legacy fallback
+            saveDataTextarea.select();
+            document.execCommand('copy');
+            btnModalCopy.textContent = 'COPIED!';
+            SoundManager.playSuccess();
+            setTimeout(() => {
+                btnModalCopy.textContent = 'COPY TO CLIPBOARD';
+            }, 1500);
+        }
     });
 
     btnModalClose.addEventListener('click', () => {
@@ -357,6 +378,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     btnLoad.addEventListener('click', () => {
         SoundManager.playClick();
+        fileLoader.value = ''; // Reset so re-selecting the same file triggers change
         fileLoader.click();
     });
 
@@ -598,8 +620,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const { svgClone } = prepareExportSvg(true);
 
-        // Open print window
+        // Open print window (may return null if popup is blocked)
         const printWindow = window.open('', '_blank', 'width=1100,height=850');
+        if (!printWindow) {
+            logToConsole('ERROR: Popup blocked by browser. Please allow popups for PDF export.', true);
+            SoundManager.playError();
+            return;
+        }
         printWindow.document.write(`
             <!DOCTYPE html>
             <html>

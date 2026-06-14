@@ -73,9 +73,9 @@ const DiagramModel = (() => {
         return state.nodes[cleanId];
     }
 
-    function updateNode(id, fields) {
+    function updateNode(id, fields, skipHistory = false) {
         if (!state.nodes[id]) return false;
-        saveHistory();
+        if (!skipHistory) saveHistory();
         
         state.nodes[id] = {
             ...state.nodes[id],

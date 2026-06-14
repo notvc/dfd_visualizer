@@ -8,6 +8,7 @@ const CanvasManager = (() => {
     let groupFlows = null;
     let groupNodes = null;
     let groupTemp = null;
+    let initialized = false;
 
     // Viewport State (Zoom & Pan)
     let zoomLevel = 1.0;
@@ -57,7 +58,17 @@ const CanvasManager = (() => {
     let onStateModified = null;
 
     function init(svgId, callbacks = {}) {
+        // Guard against duplicate initialization (prevents stacked event listeners)
+        if (initialized) return;
+        initialized = true;
+
         svg = document.getElementById(svgId);
+        if (!svg) {
+            console.error('CanvasManager: SVG element not found:', svgId);
+            initialized = false;
+            return;
+        }
+
         onSelectionChange = callbacks.onSelection;
         onStateModified = callbacks.onModify;
 
@@ -67,8 +78,7 @@ const CanvasManager = (() => {
             viewport = document.createElementNS('http://www.w3.org/2000/svg', 'g');
             viewport.setAttribute('id', 'viewport');
             
-            // Move existing groups and background grid inside viewport
-            const gridBg = svg.getElementById('grid-bg');
+            // Move existing groups inside viewport (grid-bg stays outside for correct layering)
             groupFlows = svg.getElementById('group-flows');
             groupNodes = svg.getElementById('group-nodes');
             groupTemp = svg.getElementById('group-temp');
@@ -84,7 +94,7 @@ const CanvasManager = (() => {
             groupTemp = svg.getElementById('group-temp');
         }
 
-        // Setup Event Listeners
+        // Setup Event Listeners (only once due to guard above)
         svg.addEventListener('mousedown', onMouseDown);
         svg.addEventListener('mousemove', onMouseMove);
         window.addEventListener('mouseup', onMouseUp);
@@ -104,6 +114,17 @@ const CanvasManager = (() => {
         const btnId = `tool-${toolName}`;
         const btn = document.getElementById(btnId);
         if (btn) btn.classList.add('active');
+
+        // Update canvas cursor based on tool
+        if (svg) {
+            if (toolName === 'select') {
+                svg.style.cursor = 'default';
+            } else if (toolName === 'link') {
+                svg.style.cursor = 'crosshair';
+            } else {
+                svg.style.cursor = 'cell';
+            }
+        }
 
         // Reset any temp linking states
         clearTempLink();
@@ -580,18 +601,18 @@ const CanvasManager = (() => {
 
     // Mouse Interaction Handlers
     function onMouseDown(e) {
-        init(); // Ensure SoundManager is initialized
+        SoundManager.init(); // Ensure audio context is ready on user gesture
         SoundManager.playClick();
 
         const coords = screenToCanvas(e.clientX, e.clientY);
 
-        // Clicked canvas background
         if (activeTool === 'select') {
+            // Clicked canvas background — start panning
             isPanning = true;
             panStart = { x: e.clientX, y: e.clientY };
             selectElement(null);
         } else if (activeTool === 'process' || activeTool === 'entity' || activeTool === 'store') {
-            // Place new node
+            // Place new node at click position
             const id = DiagramModel.generateUniqueId(activeTool);
             const label = activeTool.toUpperCase() + ' NODE';
             
@@ -607,6 +628,9 @@ const CanvasManager = (() => {
             selectElement('node', newNode.id);
             
             if (onStateModified) onStateModified();
+        } else if (activeTool === 'link') {
+            // Clicked empty canvas while in link mode — do nothing, require clicking a node
+            SoundManager.playError();
         }
     }
 
@@ -615,6 +639,8 @@ const CanvasManager = (() => {
             dragNode = node.id;
             dragStart = { x: e.clientX, y: e.clientY };
             nodeOffset = { x: node.x, y: node.y };
+            // Save one undo snapshot at drag start (drag moves use skipHistory=true)
+            DiagramModel.updateNode(node.id, { x: node.x, y: node.y });
             selectElement('node', node.id);
             SoundManager.startDragHum();
         } else if (activeTool === 'link') {
@@ -651,7 +677,7 @@ const CanvasManager = (() => {
             const snappedX = Math.round(targetX / SNAP_GRID) * SNAP_GRID;
             const snappedY = Math.round(targetY / SNAP_GRID) * SNAP_GRID;
 
-            DiagramModel.updateNode(dragNode, { x: snappedX, y: snappedY });
+            DiagramModel.updateNode(dragNode, { x: snappedX, y: snappedY }, true);
             
             // Dynamic redraw
             draw();
