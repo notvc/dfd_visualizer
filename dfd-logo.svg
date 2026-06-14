@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title desc">
+    <title id="title">Retro Data Flow Diagram Logo</title>
+    <desc id="desc">A green CRT-style data flow diagram icon with connected nodes.</desc>
+    <defs>
+        <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+            <feGaussianBlur stdDeviation="1.6" result="blur" />
+            <feMerge>
+                <feMergeNode in="blur" />
+                <feMergeNode in="SourceGraphic" />
+            </feMerge>
+        </filter>
+        <marker id="arrow" markerWidth="7" markerHeight="6" refX="6" refY="3" orient="auto">
+            <path d="M0 0 7 3 0 6Z" fill="#33ff33" />
+        </marker>
+    </defs>
+    <rect width="64" height="64" rx="8" fill="#000b00" />
+    <path d="M8 16H56M8 28H56M8 40H56M16 8V56M28 8V56M40 8V56M52 8V56" stroke="#1a8a1a" stroke-width="0.6" opacity="0.35" />
+    <g filter="url(#glow)">
+        <rect x="7" y="8" width="20" height="14" fill="#001500" stroke="#33ff33" stroke-width="2" />
+        <circle cx="42" cy="18" r="11" fill="#001500" stroke="#33ff33" stroke-width="2" />
+        <path d="M26 45H55V58H26Z M36 45V58" fill="#001500" stroke="#33ff33" stroke-width="2" />
+        <path d="M27 15C31 14 33 14 36 16" fill="none" stroke="#33ff33" stroke-width="2.2" marker-end="url(#arrow)" />
+        <path d="M39 29C38 35 35 39 31 43" fill="none" stroke="#33ff33" stroke-width="2.2" marker-end="url(#arrow)" />
+        <text x="17" y="18" fill="#88ff88" font-family="monospace" font-size="7" font-weight="700" text-anchor="middle">DFD</text>
+        <text x="42" y="21" fill="#88ff88" font-family="monospace" font-size="6" font-weight="700" text-anchor="middle">P1</text>
+        <text x="45" y="54" fill="#88ff88" font-family="monospace" font-size="6" font-weight="700" text-anchor="middle">DATA</text>
+    </g>
+</svg>

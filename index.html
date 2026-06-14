@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Retro Data Flow Diagram Visualizer</title>
+    <link rel="icon" href="dfd-logo.svg" type="image/svg+xml">
+    <meta name="theme-color" content="#000b00">
     <!-- Google Fonts for Retro Monospace Look -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -36,17 +38,20 @@
             <!-- Control Bar -->
             <div class="control-bar retro-border-single">
                 <div class="control-group">
-                    <label for="theme-select">THEME:</label>
-                    <select id="theme-select" class="retro-input">
-                        <option value="green">GREEN PHOSPHOR</option>
-                        <option value="amber">AMBER PHOSPHOR</option>
-                        <option value="blueprint">BLUEPRINT CAD</option>
-                        <option value="paper">VINTAGE COMPUTER PAPER</option>
-                        <option value="dark">SLEEK MODERN DARK</option>
-                        <option value="cyberpunk">CYBERPUNK NEON</option>
-                        <option value="gameboy">GAMEBOY DOT-MATRIX</option>
-                        <option value="matrix">THE MATRIX</option>
-                    </select>
+                    <label>THEME:</label>
+                    <div class="custom-dropdown" id="theme-dropdown">
+                        <button id="theme-trigger" class="retro-input dropdown-trigger">GREEN PHOSPHOR</button>
+                        <ul id="theme-options" class="dropdown-options">
+                            <li data-value="green">GREEN PHOSPHOR</li>
+                            <li data-value="amber">AMBER PHOSPHOR</li>
+                            <li data-value="blueprint">BLUEPRINT CAD</li>
+                            <li data-value="paper">VINTAGE COMPUTER PAPER</li>
+                            <li data-value="dark">SLEEK MODERN DARK</li>
+                            <li data-value="cyberpunk">CYBERPUNK NEON</li>
+                            <li data-value="gameboy">GAMEBOY DOT-MATRIX</li>
+                            <li data-value="matrix">THE MATRIX</li>
+                        </ul>
+                    </div>
                 </div>
                 
                 <div class="control-group">

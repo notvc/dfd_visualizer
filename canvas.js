@@ -807,6 +807,59 @@ const CanvasManager = (() => {
         SoundManager.playClick();
     }
 
+    function fitToContent(options = {}) {
+        if (!svg) return false;
+
+        const nodesList = Object.values(DiagramModel.getNodes());
+        if (nodesList.length === 0) {
+            if (options.force) {
+                zoomLevel = 1.0;
+                panX = 0;
+                panY = 0;
+                applyTransform();
+            }
+            return false;
+        }
+
+        const rect = svg.getBoundingClientRect();
+        if (rect.width <= 0 || rect.height <= 0) return false;
+
+        const padding = rect.width < 640 ? 36 : 72;
+        const availableWidth = Math.max(160, rect.width - padding * 2);
+        const availableHeight = Math.max(160, rect.height - padding * 2);
+
+        let left = Infinity;
+        let top = Infinity;
+        let right = -Infinity;
+        let bottom = -Infinity;
+
+        nodesList.forEach(node => {
+            const bounds = getNodeBounds(node);
+            left = Math.min(left, bounds.left);
+            top = Math.min(top, bounds.top);
+            right = Math.max(right, bounds.right);
+            bottom = Math.max(bottom, bounds.bottom);
+        });
+
+        const boundsWidth = Math.max(1, right - left);
+        const boundsHeight = Math.max(1, bottom - top);
+        const contentOverflows = boundsWidth + padding * 2 > rect.width || boundsHeight + padding * 2 > rect.height;
+
+        if (!options.force && !contentOverflows) return false;
+
+        zoomLevel = Math.max(MIN_ZOOM, Math.min(
+            MAX_ZOOM,
+            1,
+            availableWidth / boundsWidth,
+            availableHeight / boundsHeight
+        ));
+
+        panX = (rect.width - boundsWidth * zoomLevel) / 2 - left * zoomLevel;
+        panY = (rect.height - boundsHeight * zoomLevel) / 2 - top * zoomLevel;
+        applyTransform();
+        return true;
+    }
+
     return {
         init,
         draw,
@@ -815,6 +868,7 @@ const CanvasManager = (() => {
         zoomIn,
         zoomOut,
         resetZoom,
+        fitToContent,
         getSelected: () => selectedElement,
         getTool: () => activeTool,
         getNodeBounds

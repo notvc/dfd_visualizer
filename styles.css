@@ -153,7 +153,7 @@ body, html {
     background-color: #111;
     font-family: 'Share Tech Mono', 'VT323', monospace;
     font-size: 16px;
-    letter-spacing: 0.5px;
+    letter-spacing: 0;
 }
 
 /* CRT Screen Effect Container */
@@ -161,6 +161,7 @@ body, html {
     position: relative;
     width: 100vw;
     height: 100vh;
+    height: 100dvh;
     overflow: hidden;
     display: flex;
     justify-content: center;
@@ -233,6 +234,7 @@ body, html {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 12px;
     padding: 6px 12px;
     border-bottom: 2px solid var(--border-color);
     font-weight: bold;
@@ -244,6 +246,11 @@ body, html {
     display: flex;
     align-items: center;
     gap: 10px;
+    min-width: 0;
+}
+
+.header-logo {
+    overflow-wrap: anywhere;
 }
 
 .system-status-indicator {
@@ -260,6 +267,8 @@ body, html {
 
 .system-status-bar {
     display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
     gap: 20px;
     font-size: 0.9rem;
 }
@@ -274,24 +283,30 @@ body, html {
     gap: 10px;
     margin-bottom: 8px;
     background-color: var(--card-bg);
+    position: relative;
+    z-index: 100; /* Ensure the control bar and its dropdowns stay above the workspace stacking context */
+    overflow: visible; /* Prevent clipping of the dropdown menu */
 }
 
 .control-group {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     gap: 8px;
     font-size: 0.9rem;
+    min-width: 0;
 }
 
 .action-buttons {
     margin-left: auto;
+    justify-content: flex-end;
 }
 
 /* Split Main Workspace */
 .workspace-container {
     flex: 1;
     display: grid;
-    grid-template-columns: 320px 1fr;
+    grid-template-columns: minmax(280px, 330px) minmax(0, 1fr);
     gap: 10px;
     min-height: 0; /* Important for flex-child scroll */
     margin-bottom: 4px;
@@ -303,6 +318,7 @@ body, html {
     flex-direction: column;
     gap: 10px;
     min-height: 0;
+    min-width: 0;
 }
 
 .main-panel {
@@ -310,6 +326,7 @@ body, html {
     flex-direction: column;
     gap: 10px;
     min-height: 0;
+    min-width: 0;
 }
 
 /* Panel Sections */
@@ -318,6 +335,15 @@ body, html {
     display: flex;
     flex-direction: column;
     min-height: 0;
+    min-width: 0;
+}
+
+.left-panel .panel-section:first-child {
+    flex: 1 1 58%;
+}
+
+#inspector-panel {
+    flex: 0 1 230px;
 }
 
 .panel-section.canvas-section {
@@ -334,11 +360,13 @@ body, html {
     padding: 4px 10px;
     font-weight: bold;
     font-size: 0.9rem;
-    letter-spacing: 1px;
+    letter-spacing: 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 8px;
     text-shadow: none;
+    min-width: 0;
 }
 
 .panel-body {
@@ -346,6 +374,7 @@ body, html {
     padding: 10px;
     overflow: auto;
     position: relative;
+    min-width: 0;
 }
 
 /* Retro Inputs and Buttons */
@@ -358,6 +387,7 @@ body, html {
     padding: 3px 6px;
     outline: none;
     transition: all 0.2s;
+    max-width: 100%;
 }
 
 .retro-input:focus {
@@ -365,14 +395,49 @@ body, html {
     border-color: var(--text-bright);
 }
 
-select.retro-input {
+/* Custom Dropdown Styling */
+.custom-dropdown {
+    position: relative;
+    display: inline-block;
+    min-width: 180px;
+}
+
+.dropdown-trigger {
+    width: 100%;
+    text-align: left;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     cursor: pointer;
 }
 
-select.retro-input option {
-    background-color: var(--bg-color);
-    color: var(--text-color);
+.dropdown-trigger::after {
+    content: '▼';
+    font-size: 0.7rem;
+    margin-left: 10px;
 }
+
+.dropdown-options {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    min-width: 200px;
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    list-style: none;
+    z-index: 500;
+    max-height: 300px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-width: calc(100vw - 40px);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.8);
+}
+
+.dropdown-options.show { display: block; }
+.dropdown-options li { padding: 6px 12px; cursor: pointer; white-space: nowrap; }
+.dropdown-options li:hover { background-color: var(--text-color); color: var(--bg-color); }
 
 /* Buttons */
 .retro-btn {
@@ -382,9 +447,11 @@ select.retro-input option {
     font-family: inherit;
     font-size: 0.9rem;
     padding: 3px 10px;
+    min-height: 28px;
     cursor: pointer;
     text-transform: uppercase;
     transition: all 0.1s ease;
+    white-space: nowrap;
 }
 
 .retro-btn:hover {
@@ -406,8 +473,10 @@ select.retro-input option {
     font-family: inherit;
     font-size: 0.75rem;
     padding: 1px 6px;
+    min-height: 24px;
     cursor: pointer;
     transition: all 0.1s;
+    white-space: nowrap;
 }
 
 .retro-btn-sm:hover {
@@ -422,8 +491,10 @@ select.retro-input option {
     font-family: inherit;
     font-size: 0.9rem;
     padding: 4px 12px;
+    min-height: 30px;
     cursor: pointer;
     transition: all 0.1s;
+    white-space: nowrap;
 }
 
 .retro-btn-accent:hover {
@@ -439,8 +510,10 @@ select.retro-input option {
     font-family: inherit;
     font-size: 0.9rem;
     padding: 4px 12px;
+    min-height: 30px;
     cursor: pointer;
     transition: all 0.1s;
+    white-space: nowrap;
 }
 
 .retro-btn-danger:hover {
@@ -484,6 +557,7 @@ select.retro-input option {
     padding: 4px 8px;
     border-top: 1px solid var(--border-dim);
     background-color: var(--input-bg);
+    line-height: 1.35;
 }
 
 /* Property Inspector Panel */
@@ -513,6 +587,7 @@ select.retro-input option {
     display: flex;
     align-items: center;
     gap: 10px;
+    min-width: 0;
 }
 
 .field-group label {
@@ -524,6 +599,7 @@ select.retro-input option {
 
 .field-group .retro-input {
     flex: 1;
+    min-width: 0;
 }
 
 .read-only-field {
@@ -534,6 +610,8 @@ select.retro-input option {
     padding: 3px 6px;
     flex: 1;
     display: inline-block;
+    min-width: 0;
+    overflow-wrap: anywhere;
 }
 
 .field-buttons {
@@ -552,6 +630,7 @@ select.retro-input option {
     overflow: hidden;
     cursor: default;
     background-color: var(--bg-color);
+    min-height: 320px;
 }
 
 #dfd-canvas {
@@ -559,6 +638,7 @@ select.retro-input option {
     height: 100%;
     display: block;
     user-select: none;
+    touch-action: none;
 }
 
 /* SVG Elements Styling */
@@ -707,11 +787,14 @@ select.retro-input option {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
 }
 
 .canvas-tools {
     display: flex;
+    flex-wrap: wrap;
     gap: 4px;
+    justify-content: flex-end;
 }
 
 .canvas-tool-btn {
@@ -721,8 +804,10 @@ select.retro-input option {
     font-family: inherit;
     font-size: 0.75rem;
     padding: 1px 8px;
+    min-height: 24px;
     cursor: pointer;
     transition: all 0.1s;
+    white-space: nowrap;
 }
 
 .canvas-tool-btn:hover {
@@ -743,12 +828,14 @@ select.retro-input option {
     bottom: 10px;
     left: 10px;
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     gap: 6px;
     font-size: 0.75rem;
     background-color: rgba(0, 0, 0, 0.6);
     padding: 4px 8px;
     border: 1px solid var(--border-dim);
+    max-width: calc(100% - 150px);
 }
 
 .crt-theme-paper .presets-container {
@@ -762,8 +849,10 @@ select.retro-input option {
     font-family: inherit;
     font-size: 0.7rem;
     padding: 1px 6px;
+    min-height: 22px;
     cursor: pointer;
     transition: all 0.1s;
+    white-space: nowrap;
 }
 
 .preset-btn:hover {
@@ -777,7 +866,10 @@ select.retro-input option {
     bottom: 10px;
     right: 10px;
     display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
     gap: 4px;
+    max-width: 120px;
 }
 
 .zoom-btn {
@@ -838,7 +930,8 @@ select.retro-input option {
 .modal-content {
     background-color: var(--card-bg);
     width: 500px;
-    max-width: 90%;
+    max-width: calc(100vw - 32px);
+    max-height: calc(100dvh - 32px);
     display: flex;
     flex-direction: column;
 }
@@ -921,15 +1014,233 @@ select.retro-input option {
     stroke: rgba(0, 255, 0, 0.1) !important;
 }
 
-/* Responsive adjust */
-@media(max-width: 900px) {
+/* Responsive Layout */
+@media (max-width: 1100px) {
+    .system-header {
+        align-items: flex-start;
+    }
+
+    .control-bar {
+        justify-content: flex-start;
+    }
+
+    .action-buttons {
+        flex: 1 1 100%;
+        justify-content: flex-start;
+        margin-left: 0;
+    }
+
     .workspace-container {
+        grid-template-columns: minmax(250px, 300px) minmax(0, 1fr);
+    }
+}
+
+@media (max-width: 900px) {
+    body, html {
+        height: auto;
+        min-height: 100%;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    .crt-monitor {
+        width: 100%;
+        height: auto;
+        min-height: 100vh;
+        min-height: 100dvh;
+        overflow: visible;
+        align-items: stretch;
+    }
+
+    .crt-screen {
+        height: auto;
+        min-height: 100vh;
+        min-height: 100dvh;
+        overflow: visible;
+        padding: 10px;
+    }
+
+    .system-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .system-status-bar {
+        justify-content: flex-start;
+        gap: 6px 16px;
+    }
+
+    .control-bar {
+        align-items: stretch;
+    }
+
+    .control-group {
+        width: 100%;
+    }
+
+    .control-group:first-child {
+        flex-wrap: nowrap;
+    }
+
+    .control-group:first-child .retro-input {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .workspace-container {
+        flex: none;
         grid-template-columns: 1fr;
-        grid-template-rows: 250px 1fr;
+        grid-template-rows: auto;
+        min-height: auto;
+    }
+
+    .left-panel,
+    .main-panel {
+        min-height: auto;
+    }
+
+    .left-panel .panel-section:first-child {
+        flex: none;
+        height: clamp(280px, 42dvh, 380px);
+    }
+
+    #inspector-panel {
+        flex: none;
+        min-height: 180px;
+    }
+
+    .panel-section.canvas-section {
+        flex: none;
+    }
+
+    .canvas-body {
+        height: clamp(360px, 64dvh, 620px);
+        min-height: 360px;
     }
     
     .panel-section.console-section {
-        height: 100px;
+        height: 130px;
+    }
+
+    .canvas-header {
+        align-items: flex-start;
+    }
+
+    .canvas-tools {
+        width: 100%;
+        justify-content: flex-start;
+    }
+}
+
+@media (max-width: 640px) {
+    .crt-screen {
+        padding: 8px;
+    }
+
+    .system-header {
+        padding: 6px 8px;
+        font-size: 1rem;
+    }
+
+    .system-status-bar {
+        font-size: 0.78rem;
+        gap: 4px 10px;
+    }
+
+    .control-bar {
+        padding: 8px;
+        gap: 8px;
+    }
+
+    .control-group {
+        align-items: stretch;
+    }
+
+    .control-group:nth-child(2) .retro-btn,
+    .action-buttons .retro-btn {
+        flex: 1 1 calc(50% - 8px);
+        min-width: 0;
+    }
+
+    .retro-btn,
+    .retro-btn-accent,
+    .retro-btn-danger {
+        min-height: 34px;
+        padding: 5px 8px;
+    }
+
+    .panel-header {
+        padding: 5px 8px;
+        align-items: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .canvas-tool-btn {
+        flex: 1 1 calc(50% - 4px);
+        min-height: 30px;
+        padding: 4px 6px;
+    }
+
+    .left-panel .panel-section:first-child {
+        height: clamp(300px, 48dvh, 430px);
+    }
+
+    .canvas-body {
+        display: flex;
+        flex-direction: column;
+        height: clamp(360px, 62dvh, 560px);
+    }
+
+    #dfd-canvas {
+        flex: 1 1 auto;
+        min-height: 0;
+        height: auto;
+    }
+
+    .field-group {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 4px;
+    }
+
+    .field-group label {
+        width: auto;
+    }
+
+    .field-buttons,
+    .modal-buttons {
+        flex-direction: column;
+    }
+
+    .presets-container {
+        position: static;
+        margin: 8px 8px 0;
+        max-width: none;
+        background-color: var(--card-bg);
+    }
+
+    .canvas-zoom-pan {
+        position: static;
+        margin: 6px 8px 8px;
+        max-width: none;
+    }
+}
+
+@media (max-width: 420px) {
+    .control-group:nth-child(2) .retro-btn,
+    .action-buttons .retro-btn,
+    .canvas-tool-btn,
+    .preset-btn {
+        flex-basis: 100%;
+    }
+
+    .presets-container {
+        align-items: stretch;
+    }
+
+    .zoom-btn {
+        flex: 1 1 0;
+        min-width: 42px;
     }
 }
 

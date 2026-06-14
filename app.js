@@ -6,7 +6,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // ----------------------------------------------------------------------
     // DOM Cache
     // ----------------------------------------------------------------------
-    const themeSelect = document.getElementById('theme-select');
+    const themeTrigger = document.getElementById('theme-trigger');
+    const themeOptions = document.getElementById('theme-options');
     const toggleScanlinesBtn = document.getElementById('toggle-scanlines');
     const toggleSoundBtn = document.getElementById('toggle-sound');
     
@@ -59,6 +60,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // Internal States
     // ----------------------------------------------------------------------
     let isUpdatingFromEditor = false;
+    let resizeFitTimer = null;
+
+    function fitDiagramToViewport() {
+        CanvasManager.fitToContent({ force: window.innerWidth <= 900 });
+    }
 
     // ----------------------------------------------------------------------
     // System Clock
@@ -98,13 +104,31 @@ document.addEventListener('DOMContentLoaded', () => {
     // ----------------------------------------------------------------------
     // Theme & FX Management
     // ----------------------------------------------------------------------
-    themeSelect.addEventListener('change', (e) => {
-        const theme = e.target.value;
-        document.body.className = '';
-        document.body.classList.add(`crt-theme-${theme}`);
-        logToConsole(`THEME SET TO: ${theme.toUpperCase()} PHOSPHOR`);
+    themeTrigger.addEventListener('click', (e) => {
+        e.stopPropagation();
         SoundManager.playClick();
-        CanvasManager.draw(); // Redraw for glow filtering adjustments
+        themeOptions.classList.toggle('show');
+    });
+
+    themeOptions.querySelectorAll('li').forEach(option => {
+        option.addEventListener('click', () => {
+            const theme = option.getAttribute('data-value');
+            themeTrigger.textContent = option.textContent;
+            themeOptions.classList.remove('show');
+            
+            document.body.className = '';
+            document.body.classList.add(`crt-theme-${theme}`);
+            logToConsole(`THEME SET TO: ${theme.toUpperCase()} PHOSPHOR`);
+            SoundManager.playClick();
+            CanvasManager.draw(); // Redraw for glow filtering adjustments
+        });
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', () => {
+        if (themeOptions.classList.contains('show')) {
+            themeOptions.classList.remove('show');
+        }
     });
 
     toggleScanlinesBtn.addEventListener('click', () => {
@@ -159,6 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (result.success) {
             logToConsole(`COMPILATION SUCCESSFUL. RESOLVED ${Object.keys(DiagramModel.getNodes()).length} NODES & ${DiagramModel.getFlows().length} FLOWS.`, false);
             SoundManager.playSuccess();
+            fitDiagramToViewport();
         } else {
             logToConsole('COMPILATION FAILED!', true);
             result.errors.forEach(err => {
@@ -393,6 +418,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (result.success) {
                 logToConsole('SUCCESSFULLY LOADED DIAGRAM FROM JSON PROJECT FILE.');
                 SoundManager.playSuccess();
+                fitDiagramToViewport();
             } else {
                 logToConsole(`ERROR LOADING PROJECT: ${result.error}`, true);
                 SoundManager.playError();
@@ -714,6 +740,11 @@ To reload this diagram, copy the script block above, paste it into the DFD-Termi
     // Load ATM by default
     scriptEditor.value = TemplateRegistry.atm;
     compileDSL();
+
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeFitTimer);
+        resizeFitTimer = setTimeout(fitDiagramToViewport, 120);
+    });
 
     logToConsole('DFD WORKSPACE INITIALIZATION FULLY COMPLETE.');
 });
