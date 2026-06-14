@@ -1,0 +1,1002 @@
+/* ==========================================================================
+   RETRO DFD VISUALIZER - STYLE SYSTEM
+   ========================================================================== */
+
+/* Theme Definition and CSS Variables */
+.crt-theme-green {
+    --bg-color: #000b00;
+    --card-bg: #001500;
+    --text-color: #33ff33;
+    --text-dim: #1ea31e;
+    --text-bright: #88ff88;
+    --border-color: #33ff33;
+    --border-dim: #1a8a1a;
+    --grid-line-color: rgba(51, 255, 51, 0.07);
+    --selection-bg: #114411;
+    --accent-color: #00ffff;
+    --accent-glow: rgba(0, 255, 255, 0.4);
+    --glow-color: rgba(51, 255, 51, 0.6);
+    --danger-color: #ff3333;
+    --input-bg: #000800;
+}
+
+.crt-theme-amber {
+    --bg-color: #0f0600;
+    --card-bg: #1a0b00;
+    --text-color: #ffb000;
+    --text-dim: #b37b00;
+    --text-bright: #ffd480;
+    --border-color: #ffb000;
+    --border-dim: #996a00;
+    --grid-line-color: rgba(255, 176, 0, 0.07);
+    --selection-bg: #402000;
+    --accent-color: #ff33ff;
+    --accent-glow: rgba(255, 51, 255, 0.4);
+    --glow-color: rgba(255, 176, 0, 0.6);
+    --danger-color: #ff3333;
+    --input-bg: #080300;
+}
+
+.crt-theme-blueprint {
+    --bg-color: #001a33;
+    --card-bg: #002b55;
+    --text-color: #ffffff;
+    --text-dim: #88ccff;
+    --text-bright: #ffffff;
+    --border-color: #00f0ff;
+    --border-dim: #0077aa;
+    --grid-line-color: rgba(0, 240, 255, 0.15);
+    --selection-bg: #004488;
+    --accent-color: #ffff00;
+    --accent-glow: rgba(255, 255, 0, 0.4);
+    --glow-color: rgba(0, 240, 255, 0.5);
+    --danger-color: #ff5555;
+    --input-bg: #001224;
+}
+
+.crt-theme-paper {
+    --bg-color: #eae5d9;
+    --card-bg: #f5f2eb;
+    --text-color: #1a1a1a;
+    --text-dim: #555555;
+    --text-bright: #000000;
+    --border-color: #2b2b2b;
+    --border-dim: #666666;
+    --grid-line-color: rgba(0, 0, 0, 0.05);
+    --selection-bg: #d0c9b8;
+    --accent-color: #aa2222;
+    --accent-glow: rgba(170, 34, 34, 0.2);
+    --glow-color: transparent;
+    --danger-color: #990000;
+    --input-bg: #ffffff;
+}
+
+.crt-theme-dark {
+    --bg-color: #121212;
+    --card-bg: #1e1e1e;
+    --text-color: #e0e0e0;
+    --text-dim: #888888;
+    --text-bright: #ffffff;
+    --border-color: #444444;
+    --border-dim: #333333;
+    --grid-line-color: rgba(255, 255, 255, 0.03);
+    --selection-bg: #333333;
+    --accent-color: #0088ff;
+    --accent-glow: rgba(0, 136, 255, 0.2);
+    --glow-color: transparent;
+    --danger-color: #ff3b30;
+    --input-bg: #181818;
+}
+
+.crt-theme-cyberpunk {
+    --bg-color: #18002a;
+    --card-bg: #290045;
+    --text-color: #00ffff;
+    --text-dim: #008fa7;
+    --text-bright: #ffffff;
+    --border-color: #ff007f;
+    --border-dim: #9d004e;
+    --grid-line-color: rgba(0, 255, 255, 0.08);
+    --selection-bg: rgba(255, 0, 127, 0.2);
+    --accent-color: #ffff00;
+    --accent-glow: rgba(255, 255, 0, 0.4);
+    --glow-color: rgba(0, 255, 255, 0.5);
+    --danger-color: #ff0055;
+    --input-bg: #11001e;
+}
+
+.crt-theme-gameboy {
+    --bg-color: #8bac0f;
+    --card-bg: #9bbc0f;
+    --text-color: #0f380f;
+    --text-dim: #306230;
+    --text-bright: #0f380f;
+    --border-color: #0f380f;
+    --border-dim: #306230;
+    --grid-line-color: rgba(15, 56, 15, 0.08);
+    --selection-bg: rgba(48, 98, 48, 0.3);
+    --accent-color: #306230;
+    --accent-glow: transparent;
+    --glow-color: transparent;
+    --danger-color: #0f380f;
+    --input-bg: #8bac0f;
+}
+
+.crt-theme-matrix {
+    --bg-color: #000000;
+    --card-bg: #040804;
+    --text-color: #00ff00;
+    --text-dim: #008800;
+    --text-bright: #88ff88;
+    --border-color: #00ff00;
+    --border-dim: #006600;
+    --grid-line-color: rgba(0, 255, 0, 0.08);
+    --selection-bg: #003300;
+    --accent-color: #ffffff;
+    --accent-glow: rgba(255, 255, 255, 0.5);
+    --glow-color: rgba(0, 255, 0, 0.7);
+    --danger-color: #ff3333;
+    --input-bg: #000300;
+}
+
+/* Global Reset */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body, html {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: #111;
+    font-family: 'Share Tech Mono', 'VT323', monospace;
+    font-size: 16px;
+    letter-spacing: 0.5px;
+}
+
+/* CRT Screen Effect Container */
+.crt-monitor {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #000;
+}
+
+/* Overlays for curved scanline aesthetic */
+.crt-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+/* Scanline stripes */
+.scanlines {
+    background: linear-gradient(
+        rgba(18, 16, 16, 0) 50%, 
+        rgba(0, 0, 0, 0.25) 50%
+    );
+    background-size: 100% 4px;
+}
+.crt-theme-paper .scanlines {
+    background: linear-gradient(
+        rgba(255, 255, 255, 0) 50%, 
+        rgba(0, 0, 0, 0.04) 50%
+    );
+    background-size: 100% 4px;
+}
+
+/* Subtle CRT flicker animation */
+.flicker {
+    animation: crt-flicker 0.15s infinite;
+    opacity: 0.15;
+    background-color: transparent;
+}
+.crt-theme-paper .flicker {
+    display: none;
+}
+
+/* Vignette shadow gradient on corners */
+.vignette {
+    box-shadow: inset 0 0 80px rgba(0, 0, 0, 0.8);
+}
+.crt-theme-paper .vignette {
+    box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.15);
+}
+
+/* Main inner screen layout */
+.crt-screen {
+    width: 100%;
+    height: 100%;
+    padding: 12px;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+    text-shadow: 0 0 2px var(--glow-color);
+}
+
+/* Header Section */
+.system-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 12px;
+    border-bottom: 2px solid var(--border-color);
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+}
+
+.header-title-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.system-status-indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: var(--text-color);
+    box-shadow: 0 0 8px var(--text-color);
+}
+
+.system-status-indicator.pulse {
+    animation: status-pulse 2s infinite ease-in-out;
+}
+
+.system-status-bar {
+    display: flex;
+    gap: 20px;
+    font-size: 0.9rem;
+}
+
+/* Toolbar Control Bar */
+.control-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 12px;
+    gap: 10px;
+    margin-bottom: 8px;
+    background-color: var(--card-bg);
+}
+
+.control-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+}
+
+.action-buttons {
+    margin-left: auto;
+}
+
+/* Split Main Workspace */
+.workspace-container {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 10px;
+    min-height: 0; /* Important for flex-child scroll */
+    margin-bottom: 4px;
+}
+
+/* Sidebar and Main columns */
+.left-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-height: 0;
+}
+
+.main-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-height: 0;
+}
+
+/* Panel Sections */
+.panel-section {
+    background-color: var(--card-bg);
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.panel-section.canvas-section {
+    flex: 1;
+}
+
+.panel-section.console-section {
+    height: 150px;
+}
+
+.panel-header {
+    background-color: var(--border-color);
+    color: var(--bg-color);
+    padding: 4px 10px;
+    font-weight: bold;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-shadow: none;
+}
+
+.panel-body {
+    flex: 1;
+    padding: 10px;
+    overflow: auto;
+    position: relative;
+}
+
+/* Retro Inputs and Buttons */
+.retro-input {
+    background-color: var(--input-bg);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    font-family: inherit;
+    font-size: 0.9rem;
+    padding: 3px 6px;
+    outline: none;
+    transition: all 0.2s;
+}
+
+.retro-input:focus {
+    box-shadow: 0 0 6px var(--glow-color);
+    border-color: var(--text-bright);
+}
+
+select.retro-input {
+    cursor: pointer;
+}
+
+select.retro-input option {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+/* Buttons */
+.retro-btn {
+    background-color: transparent;
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    font-family: inherit;
+    font-size: 0.9rem;
+    padding: 3px 10px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.1s ease;
+}
+
+.retro-btn:hover {
+    background-color: var(--text-color);
+    color: var(--bg-color);
+    text-shadow: none;
+}
+
+.retro-btn.active {
+    background-color: var(--selection-bg);
+    border-color: var(--text-bright);
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+.retro-btn-sm {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    border: 1px solid var(--text-color);
+    font-family: inherit;
+    font-size: 0.75rem;
+    padding: 1px 6px;
+    cursor: pointer;
+    transition: all 0.1s;
+}
+
+.retro-btn-sm:hover {
+    background-color: var(--text-color);
+    color: var(--bg-color);
+}
+
+.retro-btn-accent {
+    background-color: transparent;
+    color: var(--accent-color);
+    border: 1px solid var(--accent-color);
+    font-family: inherit;
+    font-size: 0.9rem;
+    padding: 4px 12px;
+    cursor: pointer;
+    transition: all 0.1s;
+}
+
+.retro-btn-accent:hover {
+    background-color: var(--accent-color);
+    color: var(--bg-color);
+    box-shadow: 0 0 8px var(--accent-glow);
+}
+
+.retro-btn-danger {
+    background-color: transparent;
+    color: var(--danger-color);
+    border: 1px solid var(--danger-color);
+    font-family: inherit;
+    font-size: 0.9rem;
+    padding: 4px 12px;
+    cursor: pointer;
+    transition: all 0.1s;
+}
+
+.retro-btn-danger:hover {
+    background-color: var(--danger-color);
+    color: var(--bg-color);
+}
+
+/* Border Decorations */
+.retro-border-single {
+    border: 2px solid var(--border-color);
+}
+
+.retro-border-double {
+    border: 4px double var(--border-color);
+}
+
+/* DSL Script Editor Pane */
+.editor-body {
+    padding: 0;
+    overflow: hidden;
+}
+
+#script-editor {
+    width: 100%;
+    height: 100%;
+    background-color: var(--input-bg);
+    color: var(--text-color);
+    border: none;
+    resize: none;
+    font-family: inherit;
+    font-size: 0.95rem;
+    padding: 10px;
+    line-height: 1.4;
+    outline: none;
+    tab-size: 4;
+}
+
+.editor-help-text {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    padding: 4px 8px;
+    border-top: 1px solid var(--border-dim);
+    background-color: var(--input-bg);
+}
+
+/* Property Inspector Panel */
+.inspector-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 0;
+}
+
+.inspector-placeholder {
+    color: var(--text-dim);
+    font-size: 0.85rem;
+    text-align: center;
+    line-height: 1.4;
+    border: 1px dashed var(--border-dim);
+    padding: 20px;
+}
+
+.inspector-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.field-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.field-group label {
+    width: 80px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: var(--text-dim);
+}
+
+.field-group .retro-input {
+    flex: 1;
+}
+
+.read-only-field {
+    font-size: 0.9rem;
+    color: var(--text-bright);
+    background-color: var(--input-bg);
+    border: 1px solid var(--border-dim);
+    padding: 3px 6px;
+    flex: 1;
+    display: inline-block;
+}
+
+.field-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.field-buttons button {
+    flex: 1;
+}
+
+/* SVG DFD Canvas Area */
+.canvas-body {
+    padding: 0;
+    overflow: hidden;
+    cursor: default;
+    background-color: var(--bg-color);
+}
+
+#dfd-canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+    user-select: none;
+}
+
+/* SVG Elements Styling */
+.grid-line {
+    stroke: var(--grid-line-color);
+    stroke-width: 1px;
+}
+
+.grid-line-sub {
+    stroke: var(--grid-line-color);
+    stroke-width: 0.5px;
+    opacity: 0.35;
+}
+
+/* Nodes styling */
+.dfd-node {
+    cursor: move;
+}
+
+.dfd-node .node-shape {
+    fill: var(--bg-color);
+    stroke: var(--text-color);
+    stroke-width: 2px;
+    filter: url(#retro-glow);
+    transition: stroke 0.2s, stroke-width 0.2s;
+}
+
+.dfd-node .store-outline {
+    fill: none;
+}
+
+.dfd-node:hover .node-shape {
+    stroke: var(--text-bright);
+    stroke-width: 3px;
+}
+
+.dfd-node.selected .node-shape {
+    stroke: var(--accent-color);
+    stroke-width: 3px;
+    stroke-dasharray: 4 2;
+    animation: dash-rotate 4s infinite linear;
+}
+
+/* SVG Text elements */
+.dfd-node text {
+    fill: var(--text-color);
+    font-family: inherit;
+    font-size: 13px;
+    text-anchor: middle;
+    dominant-baseline: middle;
+    pointer-events: none;
+}
+
+.dfd-node.selected text {
+    fill: var(--accent-color);
+}
+
+/* Flows / Arrows */
+.dfd-flow {
+    cursor: pointer;
+}
+
+.dfd-flow .flow-path {
+    fill: none;
+    stroke: var(--text-color);
+    stroke-width: 2px;
+    marker-end: url(#arrowhead);
+    filter: url(#retro-glow);
+    transition: stroke 0.2s, stroke-width 0.2s;
+}
+
+.dfd-flow:hover .flow-path {
+    stroke: var(--text-bright);
+    stroke-width: 3px;
+}
+
+.dfd-flow.selected .flow-path {
+    stroke: var(--accent-color);
+    stroke-width: 3px;
+    stroke-dasharray: 6 3;
+    marker-end: url(#arrowhead-selected);
+    animation: dash-rotate 2s infinite linear;
+}
+
+.dfd-flow text {
+    fill: var(--text-color);
+    font-family: inherit;
+    font-size: 12px;
+    text-anchor: middle;
+    paint-order: stroke fill;
+    stroke: var(--bg-color);
+    stroke-width: 4px;
+    stroke-linejoin: round;
+}
+
+.dfd-flow.selected text {
+    fill: var(--accent-color);
+}
+
+/* Arrow markers in themes */
+.marker-arrow polygon {
+    fill: var(--text-color);
+}
+.marker-arrow-selected polygon {
+    fill: var(--accent-color);
+}
+.marker-arrow-linking polygon {
+    fill: var(--text-bright);
+}
+
+/* Data packet pulse animations on lines */
+.data-packet {
+    fill: var(--text-bright);
+    filter: url(#retro-glow);
+}
+.crt-theme-blueprint .data-packet {
+    fill: var(--accent-color);
+}
+.crt-theme-paper .data-packet {
+    fill: var(--accent-color);
+}
+
+/* Temporary connection line (linking mode) */
+.linking-line {
+    fill: none;
+    stroke: var(--text-bright);
+    stroke-width: 2px;
+    stroke-dasharray: 4 4;
+    marker-end: url(#arrowhead-linking);
+}
+
+/* Port anchors visible during linking mode */
+.port-anchor {
+    fill: var(--bg-color);
+    stroke: var(--text-bright);
+    stroke-width: 2px;
+    cursor: crosshair;
+}
+
+.port-anchor:hover {
+    fill: var(--text-bright);
+}
+
+/* Canvas Toolbar */
+.canvas-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.canvas-tools {
+    display: flex;
+    gap: 4px;
+}
+
+.canvas-tool-btn {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    font-family: inherit;
+    font-size: 0.75rem;
+    padding: 1px 8px;
+    cursor: pointer;
+    transition: all 0.1s;
+}
+
+.canvas-tool-btn:hover {
+    background-color: var(--text-color);
+    color: var(--bg-color);
+}
+
+.canvas-tool-btn.active {
+    background-color: var(--text-color);
+    color: var(--bg-color);
+    font-weight: bold;
+    box-shadow: 0 0 5px var(--glow-color);
+}
+
+/* Presets Panel overlay on canvas */
+.presets-container {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 4px 8px;
+    border: 1px solid var(--border-dim);
+}
+
+.crt-theme-paper .presets-container {
+    background-color: rgba(255, 255, 255, 0.85);
+}
+
+.preset-btn {
+    background-color: transparent;
+    color: var(--text-color);
+    border: 1px solid var(--border-dim);
+    font-family: inherit;
+    font-size: 0.7rem;
+    padding: 1px 6px;
+    cursor: pointer;
+    transition: all 0.1s;
+}
+
+.preset-btn:hover {
+    border-color: var(--text-color);
+    background-color: var(--selection-bg);
+}
+
+/* Zoom Controls */
+.canvas-zoom-pan {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    display: flex;
+    gap: 4px;
+}
+
+.zoom-btn {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    border: 1px solid var(--border-dim);
+    font-family: inherit;
+    font-size: 0.75rem;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+#btn-zoom-reset {
+    width: auto;
+    padding: 0 6px;
+}
+
+.zoom-btn:hover {
+    border-color: var(--text-color);
+    background-color: var(--selection-bg);
+}
+
+/* Diagnostics Console */
+.console-body {
+    background-color: var(--input-bg);
+    padding: 8px 12px;
+    font-family: inherit;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    display: flex;
+    flex-direction: column-reverse; /* Scroll from bottom style */
+    overflow-y: auto;
+}
+
+.console-line {
+    white-space: pre-wrap;
+    margin-bottom: 2px;
+}
+
+/* Modals Overlay */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.75);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.modal-content {
+    background-color: var(--card-bg);
+    width: 500px;
+    max-width: 90%;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--input-bg);
+    border-left: 1px solid var(--border-dim);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--border-dim);
+    border: 1px solid var(--bg-color);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--border-color);
+}
+
+/* Animations */
+@keyframes status-pulse {
+    0%, 100% {
+        opacity: 0.4;
+        box-shadow: 0 0 4px var(--text-color);
+    }
+    50% {
+        opacity: 1;
+        box-shadow: 0 0 10px var(--text-color);
+    }
+}
+
+@keyframes crt-flicker {
+    0% { opacity: 0.15; }
+    50% { opacity: 0.145; }
+    100% { opacity: 0.155; }
+}
+
+@keyframes dash-rotate {
+    to {
+        stroke-dashoffset: -40;
+    }
+}
+
+/* Grid Line Styling in themes */
+.crt-theme-paper .grid-line, .crt-theme-paper .grid-line-sub {
+    stroke: rgba(0, 0, 0, 0.08);
+}
+.crt-theme-blueprint .grid-line, .crt-theme-blueprint .grid-line-sub {
+    stroke: rgba(0, 240, 255, 0.18);
+}
+
+/* Print/Export Styling adjustments */
+.no-glow {
+    filter: none !important;
+    text-shadow: none !important;
+}
+
+.crt-theme-dark .grid-line, .crt-theme-dark .grid-line-sub {
+    stroke: rgba(255, 255, 255, 0.04) !important;
+}
+.crt-theme-cyberpunk .grid-line, .crt-theme-cyberpunk .grid-line-sub {
+    stroke: rgba(0, 255, 255, 0.09) !important;
+}
+.crt-theme-gameboy .grid-line, .crt-theme-gameboy .grid-line-sub {
+    stroke: rgba(15, 56, 15, 0.12) !important;
+}
+.crt-theme-matrix .grid-line, .crt-theme-matrix .grid-line-sub {
+    stroke: rgba(0, 255, 0, 0.1) !important;
+}
+
+/* Responsive adjust */
+@media(max-width: 900px) {
+    .workspace-container {
+        grid-template-columns: 1fr;
+        grid-template-rows: 250px 1fr;
+    }
+    
+    .panel-section.console-section {
+        height: 100px;
+    }
+}
+
+/* Print Styles for Vector PDF Export */
+@media print {
+    body, html {
+        background-color: #ffffff !important;
+        color: #000000 !important;
+        width: 100% !important;
+        height: 100% !important;
+        overflow: visible !important;
+    }
+    .crt-monitor, .crt-screen {
+        padding: 0 !important;
+        background-color: #ffffff !important;
+        color: #000000 !important;
+        box-shadow: none !important;
+        text-shadow: none !important;
+    }
+    .crt-overlay, .system-header, .control-bar, .left-panel, .console-section, .canvas-zoom-pan, .presets-container, .panel-header {
+        display: none !important;
+    }
+    .workspace-container {
+        display: block !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    .main-panel {
+        display: block !important;
+        width: 100% !important;
+        height: 100% !important;
+    }
+    .panel-section.canvas-section {
+        border: none !important;
+        background: #ffffff !important;
+        width: 100% !important;
+        height: 100vh !important;
+    }
+    #dfd-canvas {
+        background-color: #ffffff !important;
+    }
+    .grid-line, .grid-line-sub {
+        stroke: rgba(0, 0, 0, 0.08) !important;
+    }
+    .node-shape {
+        fill: #ffffff !important;
+        stroke: #000000 !important;
+        stroke-width: 2px !important;
+        filter: none !important;
+    }
+    .dfd-node text {
+        fill: #000000 !important;
+    }
+    .flow-path {
+        stroke: #000000 !important;
+        stroke-width: 2px !important;
+        filter: none !important;
+    }
+    .dfd-flow text {
+        fill: #000000 !important;
+        stroke: #ffffff !important;
+        stroke-width: 4px !important;
+    }
+    .marker-arrow polygon {
+        fill: #000000 !important;
+    }
+    .data-packet {
+        display: none !important;
+    }
+}

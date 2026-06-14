@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retro Data Flow Diagram Visualizer</title>
+    <!-- Google Fonts for Retro Monospace Look -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="crt-theme-green">
+    <!-- Main CRT Monitor Container -->
+    <div id="monitor" class="crt-monitor">
+        <!-- Scanlines & Curved Screen Vignette Overlays -->
+        <div class="crt-overlay scanlines"></div>
+        <div class="crt-overlay flicker"></div>
+        <div class="crt-overlay vignette"></div>
+        
+        <!-- Screen Content Container -->
+        <div class="crt-screen">
+            <!-- Header Bar -->
+            <header class="system-header">
+                <div class="header-title-container">
+                    <span class="system-status-indicator pulse"></span>
+                    <span class="header-logo">DFD-TERMINAL://v1.0.0</span>
+                </div>
+                <div class="system-status-bar">
+                    <span>SYS_LOC: Desktop</span>
+                    <span>MEM_OK: 640KB</span>
+                    <span id="system-time">TIME: 18:34:00</span>
+                </div>
+            </header>
+
+            <!-- Control Bar -->
+            <div class="control-bar retro-border-single">
+                <div class="control-group">
+                    <label for="theme-select">THEME:</label>
+                    <select id="theme-select" class="retro-input">
+                        <option value="green">GREEN PHOSPHOR</option>
+                        <option value="amber">AMBER PHOSPHOR</option>
+                        <option value="blueprint">BLUEPRINT CAD</option>
+                        <option value="paper">VINTAGE COMPUTER PAPER</option>
+                        <option value="dark">SLEEK MODERN DARK</option>
+                        <option value="cyberpunk">CYBERPUNK NEON</option>
+                        <option value="gameboy">GAMEBOY DOT-MATRIX</option>
+                        <option value="matrix">THE MATRIX</option>
+                    </select>
+                </div>
+                
+                <div class="control-group">
+                    <button id="toggle-scanlines" class="retro-btn active">CRT FX: ON</button>
+                    <button id="toggle-sound" class="retro-btn active">SOUND: ON</button>
+                </div>
+
+                <div class="control-group action-buttons">
+                    <button id="btn-new" class="retro-btn" title="Clear All">NEW</button>
+                    <button id="btn-save" class="retro-btn" title="Export JSON">SAVE</button>
+                    <button id="btn-load" class="retro-btn" title="Import JSON">LOAD</button>
+                    <input type="file" id="file-loader" accept=".json" style="display: none;">
+                    <button id="btn-export-svg" class="retro-btn" title="Save SVG file">EXPORT SVG</button>
+                    <button id="btn-export-png" class="retro-btn" title="Save PNG file">EXPORT PNG</button>
+                    <button id="btn-export-txt" class="retro-btn" title="Save DSL script TXT">EXPORT TXT</button>
+                    <button id="btn-export-pdf" class="retro-btn" title="Save PDF document">EXPORT PDF</button>
+                    <button id="btn-export-md" class="retro-btn" title="Save Markdown file">EXPORT MD</button>
+                </div>
+            </div>
+
+            <!-- Workspace: Main Split Panel Layout -->
+            <main class="workspace-container">
+                <!-- Left Column: Code Editor & Inspector -->
+                <section class="left-panel">
+                    <!-- Text Editor Panel -->
+                    <div class="panel-section retro-border-double">
+                        <div class="panel-header">
+                            <span>SCRIPT EDITOR (DFD-DSL)</span>
+                            <button id="btn-compile" class="retro-btn-sm" title="Recompile diagram script">RUN</button>
+                        </div>
+                        <div class="panel-body editor-body">
+                            <textarea id="script-editor" spellcheck="false" placeholder="# Nodes
+E1[Customer]
+P1(Process Order)
+S1|Orders Store|
+
+# Flows
+E1 -> P1 : Order Details
+P1 -> S1 : Save Order
+S1 -> E1 : Confirmation"></textarea>
+                        </div>
+                        <div class="editor-help-text">
+                            Syntax: E[Entity], P(Process), S|Store|, S1 -> P1: label
+                        </div>
+                    </div>
+
+                    <!-- Inspector/Property Panel -->
+                    <div id="inspector-panel" class="panel-section retro-border-double">
+                        <div class="panel-header">ELEMENT INSPECTOR</div>
+                        <div class="panel-body inspector-body">
+                            <div id="inspector-empty" class="inspector-placeholder">
+                                SELECT AN ELEMENT TO INSPECT OR MODIFY PROPERTIES
+                            </div>
+                            <div id="inspector-content" class="inspector-fields" style="display: none;">
+                                <div class="field-group">
+                                    <label>ID:</label>
+                                    <span id="inspect-id" class="read-only-field">N/A</span>
+                                </div>
+                                <div class="field-group">
+                                    <label for="inspect-type">TYPE:</label>
+                                    <select id="inspect-type" class="retro-input">
+                                        <option value="process">PROCESS (Circle)</option>
+                                        <option value="entity">EXTERNAL ENTITY (Square)</option>
+                                        <option value="store">DATA STORE (Open Box)</option>
+                                    </select>
+                                </div>
+                                <div class="field-group">
+                                    <label for="inspect-label">LABEL:</label>
+                                    <input type="text" id="inspect-label" class="retro-input">
+                                </div>
+                                <div class="field-group flow-only">
+                                    <label for="inspect-flow-source">FROM:</label>
+                                    <span id="inspect-flow-source" class="read-only-field">N/A</span>
+                                </div>
+                                <div class="field-group flow-only">
+                                    <label for="inspect-flow-target">TO:</label>
+                                    <span id="inspect-flow-target" class="read-only-field">N/A</span>
+                                </div>
+                                <div class="field-buttons">
+                                    <button id="btn-inspect-save" class="retro-btn-accent">UPDATE</button>
+                                    <button id="btn-inspect-delete" class="retro-btn-danger">DELETE</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Center/Right Column: Canvas & Console -->
+                <section class="main-panel">
+                    <!-- Interactive SVG Canvas Panel -->
+                    <div class="panel-section retro-border-double canvas-section">
+                        <div class="panel-header canvas-header">
+                            <span>INTERACTIVE CANVAS (DFD VISUALIZER)</span>
+                            <div class="canvas-tools">
+                                <button id="tool-select" class="canvas-tool-btn active" title="Select and drag elements">SELECT</button>
+                                <button id="tool-process" class="canvas-tool-btn" title="Place a Process node (P)">+ PROCESS</button>
+                                <button id="tool-entity" class="canvas-tool-btn" title="Place an Entity node (E)">+ ENTITY</button>
+                                <button id="tool-store" class="canvas-tool-btn" title="Place a Data Store node (S)">+ STORE</button>
+                                <button id="tool-link" class="canvas-tool-btn" title="Link elements with a Data Flow (L)">+ FLOW</button>
+                            </div>
+                        </div>
+                        <div class="panel-body canvas-body" id="canvas-container">
+                            <!-- SVG Canvas -->
+                            <svg id="dfd-canvas" width="100%" height="100%">
+                                <!-- Dynamic grid background -->
+                                <defs>
+                                     <pattern id="grid-pattern" width="40" height="40" patternUnits="userSpaceOnUse">
+                                         <path d="M 40 0 L 0 0 0 40" fill="none" class="grid-line" />
+                                         <path d="M 20 0 L 20 40 M 0 20 L 40 20" fill="none" class="grid-line-sub" stroke-dasharray="2 2" />
+                                     </pattern>
+                                    <!-- Arrow marker definitions -->
+                                    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="8" refY="3.5" orient="auto" class="marker-arrow">
+                                        <polygon points="0 0, 10 3.5, 0 7" />
+                                    </marker>
+                                    <marker id="arrowhead-selected" markerWidth="10" markerHeight="7" refX="8" refY="3.5" orient="auto" class="marker-arrow-selected">
+                                        <polygon points="0 0, 10 3.5, 0 7" />
+                                    </marker>
+                                    <marker id="arrowhead-linking" markerWidth="10" markerHeight="7" refX="8" refY="3.5" orient="auto" class="marker-arrow-linking">
+                                        <polygon points="0 0, 10 3.5, 0 7" />
+                                    </marker>
+                                    
+                                    <!-- Filter for glow effects -->
+                                    <filter id="retro-glow" x="-20%" y="-20%" width="140%" height="140%">
+                                        <feGaussianBlur stdDeviation="3" result="blur" />
+                                        <feMerge>
+                                            <feMergeNode in="blur" />
+                                            <feMergeNode in="SourceGraphic" />
+                                        </feMerge>
+                                    </filter>
+                                </defs>
+                                
+                                <rect width="100%" height="100%" fill="url(#grid-pattern)" id="grid-bg" />
+                                
+                                <!-- Groups for layering elements correctly -->
+                                <g id="group-flows"></g>
+                                <g id="group-nodes"></g>
+                                <g id="group-temp"></g> <!-- Temp connection lines during drawing -->
+                            </svg>
+                            
+                            <!-- Preset template quick links -->
+                            <div class="presets-container">
+                                <span>EXAMPLES:</span>
+                                <button class="preset-btn" data-preset="atm">ATM SYSTEM</button>
+                                <button class="preset-btn" data-preset="ecom">E-COMMERCE</button>
+                                <button class="preset-btn" data-preset="library">LIBRARY MGMT</button>
+                            </div>
+
+                            <div class="canvas-zoom-pan">
+                                <button id="btn-zoom-in" class="zoom-btn" title="Zoom In">+</button>
+                                <button id="btn-zoom-out" class="zoom-btn" title="Zoom Out">-</button>
+                                <button id="btn-zoom-reset" class="zoom-btn" title="Reset Zoom">RESET</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- System Diagnostics Console -->
+                    <div class="panel-section retro-border-double console-section">
+                        <div class="panel-header">SYSTEM CONSOLE LOG</div>
+                        <div class="panel-body console-body" id="console-log">
+                            <div class="console-line">[00:00:00] SYSTEM BOOT SUCCESSFUL.</div>
+                            <div class="console-line">[00:00:00] RESOLVING SYSTEM TERMINAL CHANNELS...</div>
+                            <div class="console-line">[00:00:01] INTERACTIVE DFD SYNAPSE ENGINE INITIALIZED.</div>
+                            <div class="console-line">[00:00:01] READY FOR COMMANDS. ENTER DFD SCRIPT OR DRAW DIRECTLY.</div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- Modals (like Save/Load raw JSON data) -->
+    <div id="modal-save" class="modal-overlay" style="display: none;">
+        <div class="modal-content retro-border-double">
+            <div class="panel-header">EXPORTED DIAGRAM DATA</div>
+            <div class="panel-body">
+                <textarea id="save-data-textarea" readonly class="retro-input" style="width: 100%; height: 200px; font-family: monospace;"></textarea>
+                <div class="modal-buttons">
+                    <button id="btn-modal-copy" class="retro-btn-accent">COPY TO CLIPBOARD</button>
+                    <button id="btn-modal-close" class="retro-btn">CLOSE</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script imports -->
+    <script src="sound.js"></script>
+    <script src="diagram.js"></script>
+    <script src="templates.js"></script>
+    <script src="canvas.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
