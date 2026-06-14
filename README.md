@@ -1,4 +1,4 @@
-# DFD-Terminal — Retro Data Flow Diagram Visualizer
+# DFD-Terminal — Retro Data Flow Diagram Visualizer Vibecoded
 
 > A zero-dependency, interactive **Data Flow Diagram (DFD)** editor and visualizer built with pure HTML, CSS, and JavaScript — styled as a vintage CRT computer terminal.
 
